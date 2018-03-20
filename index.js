@@ -27,7 +27,9 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) =>
     reject(error);
   });
 }), bufferProcess = (buff, paramObj, cb) => {
-  bufferProcessHelper(buff, paramObj).then(cb);
+  var func = bufferProcessHelper(buff, paramObj);
+  func.then(cb);
+  func.catch(() => { console.log("There was a problem.")});
 };
 
 module.exports = {

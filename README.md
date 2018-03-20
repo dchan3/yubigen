@@ -28,11 +28,10 @@ var params = {
   format: "JPEG", // file format
   imageMagick: false // ImageMagick enabled
 }, writeFile = (result, err) => { // write to file callback
-  fs.writeFile("bruh.png", result, (err) => {
-    expect(err).to.be.null;
-    done();
+  fs.writeFile("bruh.png", result, (error) => {
+    if (error) console.log(error);
   });
-}, s3_upload = (result, err) => { // upload to S3 Bucket, for demonstration purposes
+}, s3_upload = (result, err) => { // callback to upload to S3 Bucket, for demonstration purposes
   var args = {
     Bucket: BUCKET_NAME
     Key: KEY_NAME,

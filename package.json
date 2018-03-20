@@ -1,0 +1,21 @@
+{
+  "name": "yubigen",
+  "version": "0.0.2",
+  "description": "Node Thumbnail generation without limits",
+  "main": "index.js",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.4"
+  },
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dchan3/yubigen.git"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "gm": "^1.23.1"
+  }
+}

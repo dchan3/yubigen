@@ -18,6 +18,16 @@ Manipulates image from file given path
 ### yubigen.fromBuffer(buffer, paramObj, callback)
 Manipulates image from a buffer given path
 
+## Parameter Objects
+- `resizeParams`: resize parameters as specified by gm resize
+- `cropParams`: crop parameters as specified by gm crop
+- `format`: file format
+- `imageMagick`: ImageMagick enabled if true
+
+## Callback
+- `result`: resulting buffer
+- `err`: error if any
+
 ## Usage
 ```js
 const yubigen = require('yubigen'), fs = require('fs'),

@@ -1,7 +1,7 @@
 const gm = require('gm'), https = require('https'), fs = require('fs'),
-      path = require('path');
+      path = require('path'), url = require('url');
 
-const formats = ['ART', 'AVS', 'BMP', 'CALS', 'CIN', 'CGM', 'CMYK', 'CUR',
+const FORMATS = ['ART', 'AVS', 'BMP', 'CALS', 'CIN', 'CGM', 'CMYK', 'CUR',
                  'CUT', 'DCM', 'DCX', 'DIB', 'DPX', 'EMF', 'EPDF', 'EPI',
                  'EPS', 'EPS2', 'EPS3', 'EPSF', 'EPSI', 'EPT', 'FAX', 'FIG',
                  'FITS', 'FPX', 'GIF', 'GRAY', 'GRAYA', 'HPGL', 'HTML', 'ICO',
@@ -21,7 +21,7 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) =>
   if (paramObj.resizeParams) img = img.resize(...paramObj.resizeParams);
   if (paramObj.cropParams) img = img.crop(...paramObj.cropParams);
   img.toBuffer(
-    paramObj.format && formats.includes(paramObj.format.toUpperCase()
+    paramObj.format && FORMATS.includes(paramObj.format.toUpperCase()
   ) ? paramObj.format.toUpperCase() : 'PNG', (error, buff) => {
     resolve(buff);
     reject(error);
@@ -29,28 +29,69 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) =>
 }), bufferProcess = (buff, paramObj, cb) => {
   var func = bufferProcessHelper(buff, paramObj);
   func.then(cb);
-  func.catch(() => { console.log("There was a problem.")});
+  func.catch(() => { console.log("There was a problem."); });
+}, writeToFile = function(path, cb) {
+  return function (result, err) {
+    if (!err && result) {
+      fs.writeFile(path, result, function(error) {
+        if (error) cb(undefined, error);
+        else cb(result, null);
+      });
+    }
+    else cb(undefined, err);
+  }
 };
 
+var fromUrl = (url, paramObj, cb) => {
+  var imgBuf = new Buffer('');
+  https.get(url, (response) => {
+    response.on('data', (data) => {
+      imgBuf = Buffer.concat([imgBuf, data]);
+    });
+    response.on('end', () => {
+      bufferProcess(imgBuf, paramObj, cb);
+    });
+  }).on('error', (err) => {
+    console.log("There was an error processing the image.");
+  });
+}, fromFile = (path, paramObj, cb) => {
+  fs.readFile(path, (err, data) => {
+    if (!err) bufferProcess(data, paramObj, cb);
+    else console.log(err);
+  });
+}, fromBuffer = (buffer, paramObj, cb) => {
+  bufferProcess(buffer, paramObj, cb);
+};
+
+const AUTOTYPE = ({
+  "String": function(input, paramObj, cb) {
+    if (url.parse(input).hostname) {
+      fromUrl(input, paramObj, cb);
+    }
+    else {
+      fs.open(input, 'r', (err, fd) => {
+        if (err && err.code === 'ENOENT') {
+          cb(undefined, err);
+        }
+        else if (fd) {
+          fromFile(input, paramObj, cb);
+        }
+      });
+    }
+  },
+  "Buffer": function(input, paramObj, cb) {
+    fromBuffer(input, paramObj, cb);
+  }
+});
+
 module.exports = {
-  fromUrl: (url, paramObj, cb) => {
-    var imgBuf = new Buffer('');
-    https.get(url, (response) => {
-      response.on('data', (data) => {
-        imgBuf = Buffer.concat([imgBuf, data]);
-      });
-      response.on('end', () => {
-        bufferProcess(imgBuf, paramObj, cb);
-      });
-    }).on('error', (err) => {
-      console.log("There was an error processing the image.");
-    });
+  fromFile: fromFile,
+  fromUrl: fromUrl,
+  fromBuffer: fromBuffer,
+  predict: (input, paramObj, cb) => {
+    AUTOTYPE[input.constructor.name](input, paramObj, cb);
   },
-  fromFile: (path, paramObj, cb) => {
-    fs.readFile(path, (err, data) => {
-      if (!err) bufferProcess(data, paramObj, cb);
-      else console.log("There was an error processing the image.");
-    });
-  },
-  fromBuffer: (buffer, paramObj, cb) => { bufferProcess(buffer, paramObj, cb); }
+  outToFile: function(outFile, input, paramObj, cb) {
+    AUTOTYPE[input.constructor.name](input, paramObj, writeToFile(outFile, cb));
+  }
 };

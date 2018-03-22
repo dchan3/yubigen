@@ -1,6 +1,9 @@
 # YUBIGEN
 Node Thumbnail generation without limits
 
+[![NPM version](https://img.shields.io/npm/v/yubigen.svg?style=flat)](https://www.npmjs.com/package/yubigen)
+![npm](https://img.shields.io/npm/dt/yubigen.svg)
+
 ## Prerequisites
 Please refer to the operating system-specific instructions on installing the following before using YUBIGEN.
 - both `graphicsmagick` and `imagemagick`
@@ -10,6 +13,8 @@ Please refer to the operating system-specific instructions on installing the fol
 ## Description of Implementation
 YUBIGEN makes use of the [`resize`](http://aheckmann.github.io/gm/docs.html#resize) and [`crop`](http://aheckmann.github.io/gm/docs.html#crop) functions found in `gm` to resize and crop images according to specified parameters, respectively passed into the `resizeParams` and `cropParams` fields in the second parameter object in arrays. The third parameter is passed a callback which handles the resulting buffer in the specified manner.
 
+YUBIGEN also has a way to predict the format of the input, as well as a function to output to a specified file without needing to specify a callback. Format-specific functions have been made available as well.
+
 ## Methods
 ### yubigen.fromURL(url, paramObj, callback)
 Manipulates image given URL
@@ -17,8 +22,12 @@ Manipulates image given URL
 Manipulates image from file given path
 ### yubigen.fromBuffer(buffer, paramObj, callback)
 Manipulates image from a buffer given path
+### yubigen.predict(input, paramObj, callback)
+Predicts format (string or buffer) of the given input
+### yubigen.outToFile(outFile, input, paramObj, callback)
+Outputs to file as specified from input format prediction
 
-## Parameter Objects
+## Parameter Object Keys
 - `resizeParams`: resize parameters as specified by gm resize
 - `cropParams`: crop parameters as specified by gm crop
 - `format`: file format

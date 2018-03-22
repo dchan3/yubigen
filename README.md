@@ -76,6 +76,12 @@ fs.readFile('alpha.jpg', function(error, data) {
     });
   });
 });
+
+// Export from URL to file
+yubigen.outToFile('logo.png', "https://ktuh.org/img/ktuh-fm-logo.png", params, (result, err) {
+  if (error) console.log(error);
+  else console.log(result);
+});
 ```
 
 ## Contributors

@@ -1,10 +1,14 @@
 const yubigen = require('yubigen'), fs = require('fs'),
-      expect = require('chai').expect;
+      expect = require('chai').expect, assert = require('chai').assert;
 
 describe('It just works like magic.', function () {
   it('for URL', function(done) {
     yubigen.fromUrl("https://ktuh.org/img/ktuh-fm-logo.png",
     { resizeParams: [100] }, (result, err) => {
+      if (err) {
+        assert.fail(0, 1);
+        done();
+      }
       fs.writeFile("test/images/bruh.png", result, (e) => {
         expect(result).to.not.be.undefined;
         expect(e).to.be.null;
@@ -16,6 +20,10 @@ describe('It just works like magic.', function () {
   it('for file', function(done) {
     yubigen.fromFile("test/images/bruh.png", { resizeParams: [200, 150, "!"],
     format: "JPEG"}, (result, err) => {
+      if (err) {
+        assert.fail(0, 1);
+        done();
+      }
       fs.writeFile("test/images/alpha.jpg", result, (e) => {
         expect(result).to.not.be.undefined;
         expect(e).to.be.null;
@@ -28,6 +36,10 @@ describe('It just works like magic.', function () {
     fs.readFile('test/images/alpha.jpg', function(error, data) {
       yubigen.fromBuffer(data, { resizeParams: [90], cropParams: [50,50,20,0],
       format: "PNG"}, (result, err) => {
+        if (err) {
+          assert.fail(0, 1);
+          done();
+        }
         fs.writeFile("test/images/gamma.png", result, (e) => {
           expect(result).to.not.be.undefined;
           expect(e).to.be.null;

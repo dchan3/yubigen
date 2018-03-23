@@ -1,5 +1,5 @@
 const gm = require('gm'), https = require('https'), fs = require('fs'),
-      path = require('path'), url = require('url');
+      url = require('url');
 
 const FORMATS = ['ART', 'AVS', 'BMP', 'CALS', 'CIN', 'CGM', 'CMYK', 'CUR',
                  'CUT', 'DCM', 'DCX', 'DIB', 'DPX', 'EMF', 'EPDF', 'EPI',
@@ -15,7 +15,8 @@ const FORMATS = ['ART', 'AVS', 'BMP', 'CALS', 'CIN', 'CGM', 'CMYK', 'CUR',
                  'TXT', 'UIL', 'UYVY', 'VICAR', 'VIFF', 'WBMP', 'WMF', 'WPG',
                  'XBM', 'XCF', 'XPM', 'XWD', 'YUV']
 
-var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) => {
+var bufferProcessHelper = (imgBuf, paramObj) => new Promise(
+  (resolve, reject) => {
   var img =
     (paramObj.imageMagick ? gm.subClass({imageMagick: true}) : gm)(imgBuf);
   if (paramObj.resizeParams) img = img.resize(...paramObj.resizeParams);
@@ -26,11 +27,13 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) =>
     resolve(buff);
     reject(error);
   });
-}), bufferProcess = (buff, paramObj, cb) => {
+}),
+bufferProcess = (buff, paramObj, cb) => {
   var func = bufferProcessHelper(buff, paramObj);
   func.then(cb);
-  func.catch(() => { console.log("There was a problem."); });
-}, writeToFile = function(path, cb) {
+  func.catch((error) => { throw error });
+},
+writeToFile = function(path, cb) {
   return function (result, err) {
     if (!err && result) {
       fs.writeFile(path, result, function(error) {
@@ -40,9 +43,8 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise((resolve, reject) =>
     }
     else cb(undefined, err);
   }
-};
-
-var fromUrl = (url, paramObj, cb) => {
+},
+fromUrl = (url, paramObj, cb) => {
   var imgBuf = new Buffer('');
   https.get(url, (response) => {
     response.on('data', (data) => {
@@ -52,14 +54,16 @@ var fromUrl = (url, paramObj, cb) => {
       bufferProcess(imgBuf, paramObj, cb);
     });
   }).on('error', (err) => {
-    console.log("There was an error processing the image.");
+    throw err;
   });
-}, fromFile = (path, paramObj, cb) => {
+},
+fromFile = (path, paramObj, cb) => {
   fs.readFile(path, (err, data) => {
     if (!err) bufferProcess(data, paramObj, cb);
-    else console.log(err);
+    else throw err;
   });
-}, fromBuffer = (buffer, paramObj, cb) => {
+},
+fromBuffer = (buffer, paramObj, cb) => {
   bufferProcess(buffer, paramObj, cb);
 };
 

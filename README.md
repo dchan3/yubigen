@@ -9,6 +9,7 @@ Please refer to the operating system-specific instructions on installing the fol
 - both `graphicsmagick` and `imagemagick`
 - `npm` and `node`
 - `gm` package for `npm`. If `npm` has been installed, simply run `npm install gm`.
+- `aws-sdk` package for `npm`, but only if putting objects to AWS S3
 
 ## Description of Implementation
 YUBIGEN makes use of the [`resize`](http://aheckmann.github.io/gm/docs.html#resize) and [`crop`](http://aheckmann.github.io/gm/docs.html#crop) functions found in `gm` to resize and crop images according to specified parameters, respectively passed into the `resizeParams` and `cropParams` fields in the second parameter object in arrays. The third parameter is passed a callback which handles the resulting buffer in the specified manner.
@@ -16,20 +17,23 @@ YUBIGEN makes use of the [`resize`](http://aheckmann.github.io/gm/docs.html#resi
 YUBIGEN also has a way to predict the format of the input, as well as a function to output to a specified file without needing to specify a callback. Format-specific functions have been made available as well.
 
 ## Methods
-### yubigen.fromURL(url, paramObj, callback)
+### `yubigen.fromURL(url, paramObj, callback)`
 Manipulates image given URL
-### yubigen.fromFile(path, paramObj, callback)
+### `yubigen.fromFile(path, paramObj, callback)`
 Manipulates image from file given path
-### yubigen.fromBuffer(buffer, paramObj, callback)
+### `yubigen.fromBuffer(buffer, paramObj, callback)`
 Manipulates image from a buffer given path
-### yubigen.predict(input, paramObj, callback)
+### `yubigen.predict(input, paramObj, callback)`
 Predicts format (string or buffer) of the given input
-### yubigen.outToFile(outFile, input, paramObj, callback)
+### `yubigen.outToFile(outFile, input, paramObj, callback)`
 Outputs to file as specified from input format prediction
+### `yubigen.s3Put(config, bucket, path, input, paramObj, callback)`
+With specified credentials (default if `config` is `null`), outputs to specified S3 Bucket as specified from
+input format prediction (requires external install of `aws-sdk` package)
 
 ## Parameter Object Keys
-- `resizeParams`: resize parameters as specified by gm resize
-- `cropParams`: crop parameters as specified by gm crop
+- `resizeParams`: resize parameters as specified by [`resize`](http://aheckmann.github.io/gm/docs.html#resize) in a one-dimensional array
+- `cropParams`: crop parameters as specified by [`crop`](http://aheckmann.github.io/gm/docs.html#crop) in a one-dimensional array
 - `format`: file format
 - `imageMagick`: ImageMagick enabled if true
 
@@ -82,7 +86,20 @@ yubigen.outToFile('logo.png', "https://ktuh.org/img/ktuh-fm-logo.png", params, (
   if (error) console.log(error);
   else console.log(result);
 });
+
+// Put Object to S3 bucket `my-bucket` with default AWS credentials
+fs.readFile('test/images/alpha.jpg', function(error, data) {
+  yubigen.s3Put(null, "my-bucket", "alpha.png", data,
+  {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
+    if (error) console.log(error);
+    else if (result) console.log("Upload success!");
+  });
+});
 ```
 
-## Contributors
+## Author
 - Derek Chan
+
+## Contributors
+- Pull requests and issues are welcome! Feature requests will be considered on
+  a case-by-case basis.

@@ -1,6 +1,7 @@
 const gm = require('gm'), https = require('https'), fs = require('fs'),
       url = require('url');
 
+// Supported formats as listed on GraphicsMagick website
 const FORMATS = ['ART', 'AVS', 'BMP', 'CALS', 'CIN', 'CGM', 'CMYK', 'CUR',
                  'CUT', 'DCM', 'DCX', 'DIB', 'DPX', 'EMF', 'EPDF', 'EPI',
                  'EPS', 'EPS2', 'EPS3', 'EPSF', 'EPSI', 'EPT', 'FAX', 'FIG',
@@ -42,6 +43,39 @@ writeToFile = function(path, cb) {
       });
     }
     else cb(undefined, err);
+  }
+},
+s3PutObject = function(config, bucket, path, cb) {
+  return function (result, err) {
+    // Look for `aws-sdk`. If not installed, return.
+    if (!err && result) {
+      try {
+        require.resolve("aws-sdk");
+      }
+      catch (exc) {
+        cb(undefined, exc);
+
+        return;
+      }
+
+      var AWS = require("aws-sdk");
+
+      if (config !== null) {
+        if (config.constructor.name === "String") AWS.config.loadFromPath(config);
+        else if (config.constructor.name === "Object") AWS.config.update({
+          accessKeyId: config.accessKeyId,
+          secretAccessKey: config.secretAccessKey
+        });
+      }
+      new AWS.S3().putObject({
+        Bucket: bucket,
+        Key: path,
+        Body: result
+      }, function(error) {
+        if (error) cb(undefined, error);
+        else cb(result, null);
+      });
+    }
   }
 },
 fromUrl = (url, paramObj, cb) => {
@@ -97,5 +131,8 @@ module.exports = {
   },
   outToFile: function(outFile, input, paramObj, cb) {
     AUTOTYPE[input.constructor.name](input, paramObj, writeToFile(outFile, cb));
+  },
+  s3Put: (config, bucket, path, input, paramObj, cb) => {
+    AUTOTYPE[input.constructor.name](input, paramObj, s3PutObject(config, bucket, path, cb));
   }
 };

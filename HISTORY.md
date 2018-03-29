@@ -1,5 +1,8 @@
 # YUBIGEN History
 
+## 0.3.0
+- Introduce and document `s3Put` function
+
 ## 0.2.0
 - Add linter configuration files.
 - Replace error printing with error throwing per linter rules.

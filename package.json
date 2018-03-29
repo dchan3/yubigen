@@ -1,6 +1,6 @@
 {
   "name": "yubigen",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Node Thumbnail generation without limits",
   "main": "index.js",
   "devDependencies": {
@@ -19,5 +19,17 @@
   "license": "ISC",
   "dependencies": {
     "gm": "^1.23.1"
+  },
+  "optionalDependencies": {
+    "aws-sdk": ">=2.0.0"
+  },
+  "issues": {
+    "url": "https://github.com/dchan3/yubigen/issues",
+    "email": "dchan3@hawaii.edu"
+  },
+  "author": {
+    "name": "Derek Chan",
+    "email": "dchan3@hawaii.edu",
+    "url": "https://dchan3.github.io/"
   }
 }

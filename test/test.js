@@ -1,7 +1,7 @@
 const yubigen = require('yubigen'), fs = require('fs'),
       expect = require('chai').expect, assert = require('chai').assert;
 
-describe('It just works like magic.', function () {
+describe('Basic functions', function () {
   it('for URL', function(done) {
     yubigen.fromUrl("https://ktuh.org/img/ktuh-fm-logo.png",
     { resizeParams: [100] }, (result, err) => {
@@ -48,7 +48,9 @@ describe('It just works like magic.', function () {
       });
     });
   });
+});
 
+describe('outToFile', function() {
   it('outToFile - URL', function(done) {
     yubigen.outToFile('test/images/the_logo.jpg', "https://ktuh.org/img/ktuh-fm-logo.png",
     {format: "JPEG", resizeParams: [125]}, (result, err) => {
@@ -85,7 +87,9 @@ describe('It just works like magic.', function () {
       done();
     });
   });
+});
 
+describe('predict', function() {
   it('predict - URL', function(done) {
     yubigen.predict("https://ktuh.org/img/ktuh-fm-logo.png",
     {format: "JPEG", resizeParams: [105]}, (result, err) => {
@@ -108,6 +112,35 @@ describe('It just works like magic.', function () {
     fs.readFile('test/images/alpha.jpg', function(error, data) {
       yubigen.predict(data,
       {format: "JPEG", resizeParams: [105]}, (result, err) => {
+        expect(result).to.not.be.undefined;
+        expect(result.constructor.name).to.equal("Buffer");
+        expect(err).to.not.be.ok;
+        done();
+      });
+    });
+  });
+});
+
+describe('s3Put', function() {
+  var settings = require('./settings');
+
+  it('S3 - URL', function(done) {
+    yubigen.s3Put({
+      secretAccessKey: settings.secretAccessKey,
+      accessKeyId: settings.accessKeyId
+    }, settings.bucket, "alpha2.png", "https://ktuh.org/img/ktuh-fm-logo.png",
+    {resizeParams: [108, 108, "!"], format: "PNG"}, (result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
+    });
+  });
+
+  it('S3 - buffer', function(done) {
+    fs.readFile('test/images/alpha.jpg', function(error, data) {
+      yubigen.s3Put(null, settings.bucket, "alpha.png", data,
+      {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
         expect(result).to.not.be.undefined;
         expect(result.constructor.name).to.equal("Buffer");
         expect(err).to.not.be.ok;

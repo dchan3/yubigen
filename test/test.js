@@ -1,4 +1,4 @@
-const yubigen = require('yubigen'), fs = require('fs'),
+const yubigen = require('../index.js'), fs = require('fs'),
       expect = require('chai').expect, assert = require('chai').assert;
 
 describe('Basic functions', function () {
@@ -122,7 +122,7 @@ describe('predict', function() {
 });
 
 describe('s3Put', function() {
-  var settings = require('./settings');
+  var settings = JSON.parse(process.env.SETTINGS);
 
   it('S3 - URL', function(done) {
     yubigen.s3Put({

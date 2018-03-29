@@ -3,6 +3,7 @@ Node Thumbnail generation without limits
 
 [![NPM version](https://img.shields.io/npm/v/yubigen.svg?style=flat)](https://www.npmjs.com/package/yubigen)
 ![npm](https://img.shields.io/npm/dt/yubigen.svg)
+[![Build Status](https://travis-ci.org/dchan3/yubigen.svg?branch=master)](https://travis-ci.org/dchan3/yubigen)
 
 ## Prerequisites
 Please refer to the operating system-specific instructions on installing the following before using YUBIGEN.

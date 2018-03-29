@@ -1,0 +1,15 @@
+env:
+  - SH=bash
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install graphicsmagick imagemagick -y; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphicsmagick; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install imagemagick; fi
+language: node_js
+node_js:
+  - "node"
+cache:
+  directories:
+    - "node_modules"
+os:
+  - linux
+  - osx

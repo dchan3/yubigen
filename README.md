@@ -14,10 +14,12 @@ Please refer to the operating system-specific instructions on installing the fol
 ## Description of Implementation
 YUBIGEN makes use of the [`resize`](http://aheckmann.github.io/gm/docs.html#resize) and [`crop`](http://aheckmann.github.io/gm/docs.html#crop) functions found in `gm` to resize and crop images according to specified parameters, respectively passed into the `resizeParams` and `cropParams` fields in the second parameter object in arrays. The third parameter is passed a callback which handles the resulting buffer in the specified manner.
 
-YUBIGEN also has a way to predict the format of the input, as well as a function to output to a specified file without needing to specify a callback. Format-specific functions have been made available as well.
+YUBIGEN also has a way to predict the format of the input, as well as a function
+to output to a specified file and to upload to an AWS S3 Bucket.
+Format-specific functions have been made available as well.
 
 ## Methods
-### `yubigen.fromURL(url, paramObj, callback)`
+### `yubigen.fromUrl(url, paramObj, callback)`
 Manipulates image given URL
 ### `yubigen.fromFile(path, paramObj, callback)`
 Manipulates image from file given path
@@ -54,7 +56,8 @@ var params = {
   fs.writeFile("bruh.png", result, (error) => {
     if (error) console.log(error);
   });
-}, s3_upload = (result, err) => { // callback to upload to S3 Bucket, for demonstration purposes
+}, s3_upload = (result, err) => {
+  // callback to upload to S3 Bucket, for demonstration purposes
   var args = {
     Bucket: BUCKET_NAME
     Key: KEY_NAME,
@@ -73,8 +76,7 @@ yubigen.fromFile("bruh.png", params, s3_upload);
 
 // From buffer
 fs.readFile('alpha.jpg', function(error, data) {
-  yubigen.fromBuffer(data, { resizeParams: [90], cropParams: [50,50,20,0],
-  format: "PNG"}, (result, err) => {
+  yubigen.fromBuffer(data, params, (result, err) => {
     fs.writeFile("gamma.png", result, (error) => {
       if (error) console.log(error);
     });
@@ -82,15 +84,16 @@ fs.readFile('alpha.jpg', function(error, data) {
 });
 
 // Export from URL to file
-yubigen.outToFile('logo.png', "https://ktuh.org/img/ktuh-fm-logo.png", params, (result, err) {
+yubigen.outToFile('logo.png', "https://ktuh.org/img/ktuh-fm-logo.png", params,
+(result, err) => {
   if (error) console.log(error);
   else console.log(result);
 });
 
 // Put Object to S3 bucket `my-bucket` with default AWS credentials
 fs.readFile('test/images/alpha.jpg', function(error, data) {
-  yubigen.s3Put(null, "my-bucket", "alpha.png", data,
-  {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
+  yubigen.s3Put(null, "my-bucket", "alpha.png", data, params,
+  (result, err) => {
     if (error) console.log(error);
     else if (result) console.log("Upload success!");
   });

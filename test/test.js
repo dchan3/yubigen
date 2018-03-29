@@ -137,15 +137,52 @@ describe('s3Put', function() {
     });
   });
 
+  it('S3 - file', function(done) {
+    yubigen.s3Put({
+      secretAccessKey: settings.secretAccessKey,
+      accessKeyId: settings.accessKeyId
+    }, settings.bucket, "the_logo.png", "test/images/the_logo.jpg",
+    {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
+    });
+  });
+
   it('S3 - buffer', function(done) {
     fs.readFile('test/images/alpha.jpg', function(error, data) {
-      yubigen.s3Put(null, settings.bucket, "alpha.png", data,
+      yubigen.s3Put({
+        secretAccessKey: settings.secretAccessKey,
+        accessKeyId: settings.accessKeyId
+      }, settings.bucket, "alpha.png", data,
       {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
         expect(result).to.not.be.undefined;
         expect(result.constructor.name).to.equal("Buffer");
         expect(err).to.not.be.ok;
         done();
       });
+    });
+  });
+});
+
+describe("Text draw function", function() {
+  it('simply can draw text', function(done) {
+    yubigen.outToFile('test/images/bruh_text.jpg', 'test/images/bruh.png',
+    {
+      resizeParams: [200],
+      textParams: [
+        {
+          fontName: "Arial",
+          drawParams: [0, 0, "CENSORED", "Center"]
+        }
+      ],
+      imageMagick: false
+    },(result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
     });
   });
 });

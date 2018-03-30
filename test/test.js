@@ -205,4 +205,29 @@ describe("Text draw function - basic", function() {
       done();
     });
   });
+
+  it('simply can draw text - multiple additions', function(done) {
+    yubigen.outToFile('test/images/bruh_text_3.png', 'test/images/bruh.png',
+    {
+      resizeParams: [200],
+      textParams: [
+        {
+          color: "#5940de",
+          fontSize: "24pt",
+          drawParams: [0, 0, "CENSORED", "Center"]
+        },
+        {
+          color: "#00FFFF",
+          fontSize: "12pt",
+          drawParams: [0, 0, "VOID", "Center"]
+        }
+      ],
+      format: "PNG"
+    }, (result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
+    });
+  });
 });

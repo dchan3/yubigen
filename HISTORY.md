@@ -1,5 +1,8 @@
 # YUBIGEN History
 
+## 0.4.0
+- Introduce and document text drawing functionality
+
 ## 0.3.0
 - Introduce and document `s3Put` function
 

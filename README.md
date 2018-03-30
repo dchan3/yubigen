@@ -37,6 +37,11 @@ input format prediction (requires external install of `aws-sdk` package)
 ## Parameter Object Keys
 - `resizeParams`: resize parameters as specified by [`resize`](http://aheckmann.github.io/gm/docs.html#resize) in a one-dimensional array
 - `cropParams`: crop parameters as specified by [`crop`](http://aheckmann.github.io/gm/docs.html#crop) in a one-dimensional array
+- `textParams`: an array of text parameter objects. Text parameter object schema is as follows.
+  - `fontName`: name of font to use, passed into [`font`](http://aheckmann.github.io/gm/docs.html#font)
+  - `fontSize`: text font size, passed into [`fontSize`](http://aheckmann.github.io/gm/docs.html#fontSize)
+  - `color`: text fill color, passed into [`fill`](http://aheckmann.github.io/gm/docs.html#fill)
+  - `drawParams`: text draw parameters as specified by [`drawText`](http://aheckmann.github.io/gm/docs.html#drawText) in a one-dimensional array
 - `format`: file format
 - `imageMagick`: ImageMagick enabled if true
 
@@ -52,7 +57,19 @@ var params = {
   resizeParams: [100], // resize parameters as specified by gm resize
   cropParams: [50,50,20,0], // crop parameters as specified by gm crop
   format: "JPEG", // file format
-  imageMagick: false // ImageMagick enabled
+  imageMagick: false, // ImageMagick not enabled
+  textParams: [ // Text parameter object #1:
+    {
+      color: "#5940de",
+      fontSize: "24pt",
+      drawParams: [0, 0, "CENSORED", "Center"] // text draw parameters as specified by gm drawText
+    },
+    {
+      color: "#000000",
+      fontSize: "12pt",
+      drawParams: [0, 0, "VOID", "Center"]
+    }
+  ]
 }, writeFile = (result, err) => { // write to file callback
   fs.writeFile("bruh.png", result, (error) => {
     if (error) console.log(error);

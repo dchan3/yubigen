@@ -22,6 +22,18 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise(
     (paramObj.imageMagick ? gm.subClass({imageMagick: true}) : gm)(imgBuf);
   if (paramObj.resizeParams) img = img.resize(...paramObj.resizeParams);
   if (paramObj.cropParams) img = img.crop(...paramObj.cropParams);
+  if (paramObj.textParams) {
+    for (var i in paramObj.textParams) {
+      var textParam = paramObj.textParams[i];
+      img = img.fill(textParam.color || "#FF00FF").font(
+        textParam.fontName || "Comic Sans MS"
+      ).fontSize(
+        textParam.fontSize || "36pt"
+      ).drawText(
+        ...textParam.drawParams
+      );
+    }
+  }
   img.toBuffer(
     paramObj.format && FORMATS.includes(paramObj.format.toUpperCase()
   ) ? paramObj.format.toUpperCase() : 'PNG', (error, buff) => {

@@ -166,19 +166,39 @@ describe('s3Put', function() {
   });
 });
 
-describe("Text draw function", function() {
+describe("Text draw function - basic", function() {
   it('simply can draw text', function(done) {
     yubigen.outToFile('test/images/bruh_text.jpg', 'test/images/bruh.png',
     {
       resizeParams: [200],
       textParams: [
         {
-          fontName: "Arial",
           drawParams: [0, 0, "CENSORED", "Center"]
         }
       ],
       imageMagick: false
     },(result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
+    });
+  });
+
+  it('simply can draw text - color', function(done) {
+    yubigen.outToFile('test/images/bruh_text_2.png', 'test/images/bruh.png',
+    {
+      resizeParams: [200],
+      textParams: [
+        {
+          color: "#5940de",
+          fontSize: "24pt",
+          // (Tested on macOS) fontName: "/Library/Fonts/Comic Sans MS.ttf",
+          drawParams: [0, 0, "CENSORED", "Center"]
+        }
+      ],
+      format: "PNG"
+    }, (result, err) => {
       expect(result).to.not.be.undefined;
       expect(result.constructor.name).to.equal("Buffer");
       expect(err).to.not.be.ok;

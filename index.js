@@ -25,11 +25,12 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise(
   if (paramObj.textParams) {
     for (var i in paramObj.textParams) {
       var textParam = paramObj.textParams[i];
-      img = img.fill(textParam.color || "#FF00FF").drawText(
-      ...textParam.drawParams).fontSize(
-        textParam.fontSize || "12pt"
-      ).font(
-          textParam.fontName || "Comic Sans"
+      img = img.fill(textParam.color || "#FF00FF").font(
+        textParam.fontName || "Comic Sans MS"
+      ).fontSize(
+        textParam.fontSize || "36pt"
+      ).drawText(
+        ...textParam.drawParams
       );
     }
   }

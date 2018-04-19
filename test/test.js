@@ -122,7 +122,11 @@ describe('predict', function() {
 });
 
 describe('s3Put', function() {
-  var settings = JSON.parse(process.env.SETTINGS);
+  var settings = {
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    bucket: process.env.BUCKET
+  };
 
   it('S3 - URL', function(done) {
     this.timeout(3000);

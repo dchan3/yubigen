@@ -15,8 +15,8 @@ cache:
   directories:
   - node_modules
 script:
-- npm uninstall aws-sdk && npm test
-- npm install --save aws-sdk && npm test
+- SETTINGS=$SETTINGS npm uninstall aws-sdk && npm test
+- SETTINGS=$SETTINGS npm install --save aws-sdk && npm test
 os:
 - linux
 - osx

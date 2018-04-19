@@ -1,15 +1,22 @@
 env:
-  - SH=bash
+  global:
+    - SH=bash
+  matrix:
+    secure: Qv23liAmfwkCd+EUi8Upo+DQYffd9fQ8RoGwMwEKwbc3ejutb0bXXf/gM29KaL+K3S6VsAAqbtRU2cYi0wHTVX5bII1UOdrORd8tqk6/kD0od3PC+gZ2QeHiAfSOgGqk7vYNVOjSyM8oD+2orTgYyn9x/u35Bp+Qfj9llZm35kaqVCZEg0bme/+Cpk+fT3RS7sVEbLMU9VzQouVOA4+sRloXBwIth7xDJ0R9xsx345saSEa10cCpzEeK9/EPeqURYSnTitEiYpfe7+7BR1lGpSGZeFuexjauJuZmCULBopv2Yo2q//ZlARjJP5lJIxL3qBdj8BNzuZXR0v3S5S7XWUyb/BXHFIAVoRBL8yS747zDdXQfjOd7IdPNCTfk62TJ4BlJLtOMukzTZZPCD8pr8jbf1GJkRGVXpUuxMI4S8sDi4OZXZFV4Nl2Yj5yrx5f2tEGShqiBl1KMEwLk3lUvJiQJtVEH5qQIZvKliQQafa7q7ZbFyG5DFqrzzEg746U9Fq6n4KO9zlNTyTQhrcOMEQQRmzRaUbgoJuvcLt19yOsO5wuhBhNiZtk0bH/P3vD/mSDj3szph52CwGZb+3tT3BBZA1wWm8TS6RVqsDMDDWb1kiH1ndMj9bgjPdwmp6/t90sM6Y8Pbpni5vg7YvZlR21rUZhH1lAbkrhBwaaEvrA=
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install graphicsmagick imagemagick -y; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphicsmagick; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install imagemagick; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install graphicsmagick
+  imagemagick -y; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphicsmagick; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install imagemagick; fi
 language: node_js
 node_js:
-  - "node"
+- node
 cache:
   directories:
-    - "node_modules"
+  - node_modules
+script:
+- npm uninstall aws-sdk && npm test
+- npm install --save aws-sdk && npm test
 os:
-  - linux
-  - osx
+- linux
+- osx

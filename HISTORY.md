@@ -1,5 +1,9 @@
 # YUBIGEN History
 
+## 1.0.0
+- Add support for HTTP protocol in `fromURL` function
+- Drop `aws-sdk` as a dependency
+
 ## 0.4.0
 - Introduce and document text drawing functionality
 

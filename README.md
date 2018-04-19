@@ -10,7 +10,7 @@ Please refer to the operating system-specific instructions on installing the fol
 - both `graphicsmagick` and `imagemagick`
 - `npm` and `node`
 - `gm` package for `npm`. If `npm` has been installed, simply run `npm install gm`.
-- `aws-sdk` package for `npm`, but only if putting objects to AWS S3
+- `aws-sdk` package for `npm`, installed at the application level, but only if putting objects to AWS S3
 
 ## Description of Implementation
 YUBIGEN makes use of the [`resize`](http://aheckmann.github.io/gm/docs.html#resize) and [`crop`](http://aheckmann.github.io/gm/docs.html#crop) functions found in `gm` to resize and crop images according to specified parameters, respectively passed into the `resizeParams` and `cropParams` fields in the second parameter object in arrays. The third parameter is passed a callback which handles the resulting buffer in the specified manner.

@@ -1,4 +1,7 @@
-const gm = require('gm'), https = require('https'), fs = require('fs'),
+const gm = require('gm'),
+      https = require('https'),
+      http = require('http'),
+      fs = require('fs'),
       url = require('url');
 
 // Supported formats as listed on GraphicsMagick website
@@ -92,7 +95,8 @@ s3PutObject = function(config, bucket, path, cb) {
 },
 fromUrl = (url, paramObj, cb) => {
   var imgBuf = new Buffer('');
-  https.get(url, (response) => {
+  var protocol = url.startsWith("https") ? https : http;
+  protocol.get(url, (response) => {
     response.on('data', (data) => {
       imgBuf = Buffer.concat([imgBuf, data]);
     });

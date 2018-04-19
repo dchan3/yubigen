@@ -125,14 +125,22 @@ describe('s3Put', function() {
   var settings = JSON.parse(process.env.SETTINGS);
 
   it('S3 - URL', function(done) {
+    this.timeout(3000);
     yubigen.s3Put({
       secretAccessKey: settings.secretAccessKey,
       accessKeyId: settings.accessKeyId
     }, settings.bucket, "alpha2.png", "https://ktuh.org/img/ktuh-fm-logo.png",
     {resizeParams: [108, 108, "!"], format: "PNG"}, (result, err) => {
-      expect(result).to.not.be.undefined;
-      expect(result.constructor.name).to.equal("Buffer");
-      expect(err).to.not.be.ok;
+      try {
+        require.resolve('aws-sdk');
+        expect(result).to.not.be.undefined;
+        expect(err).to.not.be.ok;
+        expect(result.constructor.name).to.equal("Buffer");
+      }
+      catch (exc) {
+        expect(result).to.be.undefined;
+        expect(err).to.be.ok;
+      }
       done();
     });
   });
@@ -143,9 +151,16 @@ describe('s3Put', function() {
       accessKeyId: settings.accessKeyId
     }, settings.bucket, "the_logo.png", "test/images/the_logo.jpg",
     {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
-      expect(result).to.not.be.undefined;
-      expect(result.constructor.name).to.equal("Buffer");
-      expect(err).to.not.be.ok;
+      try {
+        require.resolve('aws-sdk');
+        expect(result).to.not.be.undefined;
+        expect(err).to.not.be.ok;
+        expect(result.constructor.name).to.equal("Buffer");
+      }
+      catch (exc) {
+        expect(result).to.be.undefined;
+        expect(err).to.be.ok;
+      }
       done();
     });
   });
@@ -157,9 +172,16 @@ describe('s3Put', function() {
         accessKeyId: settings.accessKeyId
       }, settings.bucket, "alpha.png", data,
       {resizeParams: [96, 96, "!"], format: "PNG"}, (result, err) => {
-        expect(result).to.not.be.undefined;
-        expect(result.constructor.name).to.equal("Buffer");
-        expect(err).to.not.be.ok;
+        try {
+          require.resolve('aws-sdk');
+          expect(result).to.not.be.undefined;
+          expect(err).to.not.be.ok;
+          expect(result.constructor.name).to.equal("Buffer");
+        }
+        catch (exc) {
+          expect(result).to.be.undefined;
+          expect(err).to.be.ok;
+        }
         done();
       });
     });
@@ -222,6 +244,19 @@ describe("Text draw function - basic", function() {
           drawParams: [0, 0, "VOID", "Center"]
         }
       ],
+      format: "PNG"
+    }, (result, err) => {
+      expect(result).to.not.be.undefined;
+      expect(result.constructor.name).to.equal("Buffer");
+      expect(err).to.not.be.ok;
+      done();
+    });
+  });
+
+  it('supports HTTP protocol', function(done) {
+    yubigen.outToFile("test/images/creepy.png",
+      "http://adaptive-images.com/content/images/creepy.jpg", {
+      resizeParams: [691],
       format: "PNG"
     }, (result, err) => {
       expect(result).to.not.be.undefined;

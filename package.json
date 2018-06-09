@@ -1,6 +1,6 @@
 {
   "name": "yubigen",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Node Thumbnail generation without limits",
   "main": "index.js",
   "devDependencies": {

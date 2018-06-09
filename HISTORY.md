@@ -1,5 +1,8 @@
 # YUBIGEN History
 
+## 1.1.0
+- Address deprecation of `Buffer` constructor
+
 ## 1.0.0
 - Add support for HTTP protocol in `fromURL` function
 - Drop `aws-sdk` as a dependency

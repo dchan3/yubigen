@@ -134,7 +134,7 @@ describe('s3Put', function() {
       secretAccessKey: settings.secretAccessKey,
       accessKeyId: settings.accessKeyId
     }, settings.bucket, "alpha2.png", "https://ktuh.org/img/ktuh-fm-logo.png",
-    {resizeParams: [108, 108, "!"], format: "PNG"}, (result, err) => {
+    { resizeParams: [108, 108, "!"], format: "PNG" }, (result, err) => {
       try {
         require.resolve('aws-sdk');
         expect(result).to.not.be.undefined;
@@ -268,5 +268,5 @@ describe("Text draw function - basic", function() {
       expect(err).to.not.be.ok;
       done();
     });
-  });
+  }).timeout(2000);
 });

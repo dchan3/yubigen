@@ -28,13 +28,10 @@ var bufferProcessHelper = (imgBuf, paramObj) => new Promise(
   if (paramObj.textParams) {
     for (var i in paramObj.textParams) {
       var textParam = paramObj.textParams[i];
-      img = img.fill(textParam.color || "#FF00FF").font(
-        textParam.fontName || "Comic Sans MS"
-      ).fontSize(
-        textParam.fontSize || "36pt"
-      ).drawText(
-        ...textParam.drawParams
-      );
+      img = img.fill(textParam.color || "#FF00FF")
+      .font(textParam.fontName || "Comic Sans MS")
+      .fontSize(textParam.fontSize || "36pt")
+      .drawText(...textParam.drawParams);
     }
   }
   img.toBuffer(
@@ -94,7 +91,7 @@ s3PutObject = function(config, bucket, path, cb) {
   }
 },
 fromUrl = (url, paramObj, cb) => {
-  var imgBuf = new Buffer('');
+  var imgBuf = Buffer.alloc(0);
   var protocol = url.startsWith("https") ? https : http;
   protocol.get(url, (response) => {
     response.on('data', (data) => {

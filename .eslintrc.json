@@ -65,7 +65,7 @@
         "consistent-this": "error",
         "curly": "off",
         "default-case": "error",
-        "dot-location": "error",
+        "dot-location": "off",
         "dot-notation": [
             "error",
             {
@@ -89,10 +89,10 @@
         "generator-star-spacing": "error",
         "getter-return": "error",
         "global-require": "off",
-        "guard-for-in": "error",
+        "guard-for-in": "off",
         "handle-callback-err": "off",
         "id-blacklist": "error",
-        "id-length": "error",
+        "id-length": "off",
         "id-match": "error",
         "implicit-arrow-linebreak": [
             "error",
@@ -160,7 +160,7 @@
         "no-lone-blocks": "error",
         "no-lonely-if": "error",
         "no-loop-func": "error",
-        "no-magic-numbers": "error",
+        "no-magic-numbers": "off",
         "no-mixed-operators": "error",
         "no-mixed-requires": "error",
         "no-multi-assign": "error",
